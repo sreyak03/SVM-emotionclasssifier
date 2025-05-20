@@ -19,6 +19,8 @@ from nltk.corpus import stopwords
 import re
 import time
 import joblib
+from sklearn.cluster import KMeans
+
 
 # Download stopwords
 nltk.download('stopwords')
@@ -46,6 +48,38 @@ small_df = df.sample(n=5000, random_state=42)
 vectorizer = TfidfVectorizer(max_features=1000)
 X_small = vectorizer.fit_transform(small_df['clean_text'])
 y_small = small_df['label']
+
+
+#clustering
+# Assuming X is your TF-IDF matrix (from vectorizer.fit_transform)
+
+# Choose number of clusters (e.g., 6 for 6 emotions, or experiment)
+num_clusters = 6
+kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+clusters = kmeans.fit_predict(X_small)
+
+# Add cluster labels to your dataframe
+df_sample = df.sample(n=5000, random_state=42)
+X_sample = vectorizer.transform(df_sample['clean_text'])
+
+kmeans = KMeans(n_clusters=6, random_state=42)
+clusters = kmeans.fit_predict(X_sample)
+
+df_sample['cluster'] = clusters  # This works because lengths match
+
+# Don't try to assign clusters to full df if clusters length != len(df)
+
+
+# Optional: show number of tweets per cluster
+print(df_sample['cluster'].value_counts())
+
+# Plot cluster sizes
+plt.bar(df_sample['cluster'].value_counts().index, df_sample['cluster'].value_counts().values)
+plt.xlabel('Cluster')
+plt.ylabel('Number of Tweets')
+plt.title('Tweet Counts per Cluster')
+plt.show()
+
 
 # 5. Train/test split
 X_train_s, X_test_s, y_train_s, y_test_s = train_test_split(X_small, y_small, test_size=0.2, random_state=42, stratify=y_small)
@@ -92,6 +126,17 @@ print(f"Accuracy: {accuracy_score(y_test, y_pred):.4f}")
 print(classification_report(y_test, y_pred))
 
 # Save model and vectorizer
+
+
+# Save model and vectorizer
 joblib.dump(final_model, 'svm_model_linear.pkl')
 joblib.dump(vectorizer_full, 'tfidf_vectorizer.pkl')
+
 print("Model and vectorizer saved.")
+
+def check_alert(new_texts):
+    X_new = vectorizer.transform(new_texts)
+    clusters_new = kmeans.predict(X_new)
+    # Example: alert if more than 3 texts in cluster 2 (say, negative cluster)
+    if sum(clusters_new == 2) > 3:
+        print("Alert: High volume of negative emotion tweets detected!")
