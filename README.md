@@ -1,10 +1,10 @@
-# 😊 Emotion Classification using SVM on Tweets
+# Emotion Classification using SVM on Tweets
 
 This project builds a **Support Vector Machine (SVM)** model to automatically classify English-language tweets into six basic emotions using a large, pre-labeled dataset. The objective is to identify the most suitable SVM kernel for the task and evaluate the model's performance in terms of accuracy and classification metrics.
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 emotionclassification/
 ├── data/
@@ -25,7 +25,7 @@ Edit
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### 1. Clone the Repository
 
@@ -52,9 +52,9 @@ Trains the best-performing model (Linear).
 
 Saves the trained model and vectorizer.
 
-🔍 Kernel Comparison
+Kernel Comparison
 Kernel	Accuracy
-Linear	89.89% ✅
+Linear	89.89% 
 RBF	86.52%
 Polynomial	84.27%
 Sigmoid	77.90%
@@ -63,7 +63,7 @@ Best Performing Kernel: Linear
 
 The linear kernel showed the best performance, likely due to the sparse and high-dimensional nature of the TF-IDF features, which are well-suited to linear decision boundaries.
 
-📊 Final Model Performance
+Final Model Performance
 Tested on the full dataset (83,362 samples):
 
 Accuracy: 89.89%
@@ -83,7 +83,7 @@ Emotion Label	Precision	Recall	F1-Score	Support
 4 (Surprise)	0.85	0.84	0.84	9542
 5 (Disgust)	0.73	0.72	0.73	2994
 
-⚙️ Model Saving
+⚙ Model Saving
 After training, the model and vectorizer are saved:
 
 python
@@ -93,7 +93,7 @@ joblib.dump(final_model, 'models/svm_model_linear.pkl')
 joblib.dump(vectorizer_full, 'models/tfidf_vectorizer.pkl')
 These files can be loaded for emotion prediction without retraining.
 
-🧠 Emotion Prediction Example
+ Emotion Prediction Example
 python
 Copy
 Edit
@@ -106,7 +106,7 @@ text = ["I am feeling very anxious and afraid."]
 X = vectorizer.transform(text)
 prediction = model.predict(X)
 print("Predicted Emotion Label:", prediction)
-📌 Future Enhancements
+ Future Enhancements
 Add a Streamlit web app for real-time tweet emotion prediction.
 
 Integrate an alerting system for flagged emotions (e.g., repeated anger or fear).
